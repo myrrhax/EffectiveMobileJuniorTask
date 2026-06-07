@@ -4,6 +4,9 @@ import com.example.bankcards.dto.UserDto;
 import com.example.bankcards.entity.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @Component
 public class UserMapper {
     public UserDto toDto(User user) {
@@ -11,7 +14,8 @@ public class UserMapper {
                 user.getId(),
                 user.getLogin(),
                 user.getEmail(),
-                user.getCreatedAt(),
+                LocalDateTime.from(user.getCreatedAt()
+                        .atOffset(ZoneOffset.ofHours(3))),
                 user.getRoles()
         );
     }

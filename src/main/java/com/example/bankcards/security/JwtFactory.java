@@ -15,6 +15,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtFactory {
+    private static final String ROLES_CLAIM = "roles";
     private final JwtProperties jwtProperties;
     private final SecretKey secretKey;
 
@@ -24,6 +25,7 @@ public class JwtFactory {
         return Jwts.builder()
                 .subject(user.getLogin())
                 .issuer(jwtProperties.issuer())
+                .claim(ROLES_CLAIM, user.getRoles())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(jwtProperties.lifetime())))
                 .signWith(secretKey)

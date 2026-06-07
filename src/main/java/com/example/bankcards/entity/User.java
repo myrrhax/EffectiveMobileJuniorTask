@@ -50,7 +50,8 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "created_at")
-    private Instant createdAt;
+    @Builder.Default
+    private Instant createdAt = Instant.now();
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(
