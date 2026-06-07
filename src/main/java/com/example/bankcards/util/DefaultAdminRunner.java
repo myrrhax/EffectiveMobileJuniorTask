@@ -41,7 +41,7 @@ public class DefaultAdminRunner implements ApplicationRunner {
                     .login(defaultAdminLogin)
                     .email(defaultAdminEmail)
                     .passwordHash(passwordEncoder.encode(defaultAdminPass))
-                    .roles(Set.of(Role.USER, Role.ADMIN))
+                    .roles(Set.of(Role.ADMIN))
                     .build();
             userRepository.save(user);
 
