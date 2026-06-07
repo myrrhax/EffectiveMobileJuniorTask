@@ -1,5 +1,6 @@
 package com.example.bankcards.service;
 
+import com.example.bankcards.dto.UpdateUserDto;
 import com.example.bankcards.dto.UserDto;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
@@ -7,10 +8,12 @@ import com.example.bankcards.exception.ApplicationException;
 import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.util.UserMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserDto getUser(UUID id) {
@@ -42,7 +46,6 @@ public class UserService {
                 .toList();
     }
 
-    @Transactional
     public UserDto opUser(UUID userId) {
         log.info("Updating user roles for user {}", userId);
         User user = getUserById(userId);
@@ -57,7 +60,6 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    @Transactional
     public void deleteUser(UUID userId) {
         log.info("Deleting user {}", userId);
         User user = getUserById(userId);
@@ -66,5 +68,21 @@ public class UserService {
         }
 
         userRepository.delete(user);
+    }
+
+    public UserDto updateUser(UUID userId, @Valid UpdateUserDto dto) {
+        User user = getUserById(userId);
+        if (!dto.login().isBlank()) {
+            user.setLogin(dto.login());
+        }
+        if (!dto.email().isBlank()) {
+            user.setEmail(dto.email());
+        }
+        if (!dto.password().isBlank()) {
+            user.setPasswordHash(passwordEncoder.encode(dto.password()));
+        }
+
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 }
