@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-Add_card_table
+      author: Denis Sizintsev
+
+      changes:
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+
+              - column:
+                  name: encrypted_card_number
+                  type: TEXT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_digits
+                  type: CHAR(4)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: owner_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: expiration_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: status
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+                    checkConstraint: CHECK (status IN ('ACTIVE', 'BLOCKED', 'EXPIRED'))
+
+              - column:
+                  name: balance
+                  type: NUMERIC(19, 2)
+                  defaultValueNumeric: 0.00
+                  constraints:
+                    nullable: false
+                    checkConstraint: CHECK (balance >= 0)
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_card_owner
+            baseTableName: card
+            baseColumnNames: owner_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addUniqueConstraint:
+            constraintName: uq_owner_card_enc
+            tableName: card
+            columnNames: owner_id, encrypted_card_number
+
+      rollback:
+        - dropTable:
+            tableName: card
+            cascadeConstraints: true

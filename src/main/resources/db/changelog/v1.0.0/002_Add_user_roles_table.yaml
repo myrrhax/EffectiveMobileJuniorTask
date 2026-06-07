@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-Add_user_roles
+      author: Denis Sizintsev
+
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: role
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+                    checkConstraint: CHECK (role IN ('USER', 'ADMIN'));
+
+        - addPrimaryKey:
+            tableName: user_roles
+            columnNames: user_id, role
+            constraintName: pk_user_roles
+
+        - addForeignKeyConstraint:
+            constraintName: fk_user_roles_users
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+      rollback:
+        - dropTable:
+            tableName: user_roles
+            cascadeConstraints: true
