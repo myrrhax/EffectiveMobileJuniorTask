@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface UserRepository extends CrudRepository<User, UUID> {
     Optional<User> findByLogin(String login);
+    boolean existsByLoginOrEmail(String login, String email);
 }

@@ -64,4 +64,13 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", orphanRemoval = true)
     private List<Card> cards = new ArrayList<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void addCard(Card card) {
+        this.cards.add(card);
+        card.setOwner(this);
+    }
 }

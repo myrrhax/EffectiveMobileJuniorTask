@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -28,8 +30,13 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     @SneakyThrows
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+    public SecurityFilterChain filterChain(HttpSecurity http,
                                                    JwtAuthenticationFilter jwtAuthenticationFilter) {
         return http
                 .httpBasic(HttpBasicConfigurer::disable)
@@ -43,7 +50,7 @@ public class SecurityConfig {
                         sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requestMatcher -> requestMatcher
-                        .requestMatchers("/api/v1/auth").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

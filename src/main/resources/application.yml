@@ -22,3 +22,9 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+
+app:
+  jwt:
+    lifetime: 1d
+    issuer: ${APP_JWT_ISSUER:bank_rest}
+    secret: ${APP_JWT_SECRET}

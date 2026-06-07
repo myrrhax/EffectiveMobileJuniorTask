@@ -1,13 +1,11 @@
 package com.example.bankcards.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record RegisterUserDto(
-        @Min(value = 3, message = "{validation.login.min-login}")
-        @Max(value = 15, message = "{validation.login.max-login}")
+        @Size(min = 3, max = 15, message = "{validation.login.login-size}")
         @NotBlank(message = "{validation.login.not-blank}")
         String login,
 
@@ -16,6 +14,6 @@ public record RegisterUserDto(
         String email,
 
         @NotBlank(message = "{validation.password.not-blank}")
-        @Min(value = 8, message = "{validation.password.min}")
+        @Size(min = 8, message = "{validation.password.min}")
         String password
 ) { }
