@@ -1,6 +1,7 @@
 package com.example.bankcards.config;
 
 import com.example.bankcards.config.properties.JwtProperties;
+import com.example.bankcards.entity.Role;
 import com.example.bankcards.security.JwtAuthenticationFilter;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,6 +52,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requestMatcher -> requestMatcher
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/user/me").authenticated()
+                        .requestMatchers("/api/v1/user/**").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .build();

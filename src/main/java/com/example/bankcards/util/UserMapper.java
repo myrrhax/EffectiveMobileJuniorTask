@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
 
 @Component
 public class UserMapper {
@@ -16,7 +17,7 @@ public class UserMapper {
                 user.getEmail(),
                 LocalDateTime.from(user.getCreatedAt()
                         .atOffset(ZoneOffset.ofHours(3))),
-                user.getRoles()
+                new HashSet<>(user.getRoles())
         );
     }
 }

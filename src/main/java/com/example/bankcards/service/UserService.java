@@ -7,9 +7,11 @@ import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,5 +30,12 @@ public class UserService {
     private User getUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 }
