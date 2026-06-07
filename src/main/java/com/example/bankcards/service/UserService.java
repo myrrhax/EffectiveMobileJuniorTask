@@ -56,4 +56,15 @@ public class UserService {
 
         return userMapper.toDto(user);
     }
+
+    @Transactional
+    public void deleteUser(UUID userId) {
+        log.info("Deleting user {}", userId);
+        User user = getUserById(userId);
+        if (user.containsRole(Role.ADMIN)) {
+            throw new ApplicationException("user.error.cannot-delete-admin", HttpStatus.FORBIDDEN, userId);
+        }
+
+        userRepository.delete(user);
+    }
 }

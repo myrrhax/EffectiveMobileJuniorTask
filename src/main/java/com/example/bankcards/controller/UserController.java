@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +53,13 @@ public class UserController {
         log.info("Processing op request for user: {}", userId);
 
         return ResponseEntity.ok(userService.opUser(userId));
+    }
+
+    @DeleteMapping("{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
+        log.info("Processing delete request for user: {}", userId);
+        userService.deleteUser(userId);
+
+        return ResponseEntity.ok().build();
     }
 }

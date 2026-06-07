@@ -1,5 +1,6 @@
 package com.example.bankcards.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -70,7 +71,8 @@ public class User {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", orphanRemoval = true,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Card> cards = new ArrayList<>();
 
     public void addRole(Role role) {
