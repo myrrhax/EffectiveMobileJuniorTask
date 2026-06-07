@@ -81,4 +81,12 @@ public class User {
         this.cards.add(card);
         card.setOwner(this);
     }
+
+    public boolean containsRole(Role role) {
+        return this.roles.contains(role);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+    }
 }

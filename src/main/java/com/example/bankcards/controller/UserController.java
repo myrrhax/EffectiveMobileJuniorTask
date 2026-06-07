@@ -11,10 +11,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -42,5 +45,12 @@ public class UserController {
         return users.isEmpty()
                 ? ResponseEntity.notFound().build()
                 : ResponseEntity.ok(users);
+    }
+
+    @PostMapping("{userId}/op")
+    public ResponseEntity<UserDto> opUser(@PathVariable UUID userId) {
+        log.info("Processing op request for user: {}", userId);
+
+        return ResponseEntity.ok(userService.opUser(userId));
     }
 }
