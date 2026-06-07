@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -36,6 +38,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"passwordHash", "roles"})
+@NamedEntityGraph(name = "userWithRoles", attributeNodes = {
+        @NamedAttributeNode("roles")
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
